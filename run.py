@@ -35,9 +35,9 @@ def flood_fill(input_board, old, new, x, y):
     Returns:
         List[str]: Modified board
     """
-
-    input_board = input_board.copy()
     # In case change of input
+    input_board = input_board.copy()
+    
     width, length = len(input_board), len(input_board[0])
     # Exception
     if input_board[x][y] != old:
