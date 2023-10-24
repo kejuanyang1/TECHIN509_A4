@@ -10,31 +10,54 @@ Date: 2023/10/22
 Flood Fill Function
 Flood-fill is a common algorithm used to fill connected regions of the board with a new value based on a specified condition. The code takes an input board, an old value, a new value, and coordinates (x, y) as arguments. It recursively updates the board by changing the old value to the new value for all connected cells.
 """
-#additional boards
-additional_boards = [
-    "......................",
-    "......**********......",
-    "......*........*......",
-    "......*........*......",
-    "......*........*****..",
-    "....***............*..",
-    "....*............***..",
-    "....**************....",
-]
 
-for additional_board in additional_boards:
-    print("Original Board:")
-    for a in additional_board:
-        print(a)
+def flood_fill(input_board, old, new, x, y):
+    """
+    Returns a board with old values replaced with new values through flood-filling, starting from coordinates x, y.
+
+    Args:
+        input_board (List[str]): The input board.
+        old (str): Value to be replaced.
+        new (str): Value that replaces the old.
+        x (int): X-coordinate of the flood start point.
+        y (int): Y-coordinate of the flood start point.
+
+    Returns:
+        List[str]: Modified board.
+    """
+    # Ensure input_board is a list of strings and all rows have the same length
+    assert isinstance(input_board, list), "Input board should be a list of strings."
+    assert all(isinstance(row, str) and len(row) == len(input_board[0]) for row in input_board), "All rows should have the same length."
     
-    modified_board = flood_fill(input_board=additional_board, old=".", new="~", x=5, y=12)
+    width, length = len(input_board), len(input_board[0])
     
-    print("\nModified Board:")
-    for a in modified_board:
-        print(a)
-    print('\n\n')
+    # Ensure x and y are within bounds
+    assert 0 <= x < width and 0 <= y < length, "(x, y) coordinates are out of bounds."
 
+    # In case change of input
+    input_board = input_board.copy()
+    
+    if input_board[x][y] != old:
+        raise ValueError(f"Start value at ({x}, {y}) is {input_board[x][y]}, not {old}!")
+    
+    # Modify the value
+    s_list = list(input_board[x])
+    s_list[y] = new
+    input_board[x] = ''.join(s_list)
+    
+    # Recursive function
+    if x > 0 and input_board[x - 1][y] == old:
+        input_board = flood_fill(input_board, old, new, x - 1, y)
+    if x < width - 1 and input_board[x + 1][y] == old:
+        input_board = flood_fill(input_board, old, new, x + 1, y)
+    if y > 0 and input_board[x][y - 1] == old:
+        input_board = flood_fill(input_board, old, new, x, y - 1)
+    if y < length - 1 and input_board[x][y + 1] == old:
+        input_board = flood_fill(input_board, old, new, x, y + 1)
+    
+    return input_board
 
+# Default test board
 board = [
     "......................",
     "......##########......",
@@ -46,50 +69,25 @@ board = [
     "....##############....",
 ]
 
+# Additional test board
+additional_board = [
+    "####.................",
+    "#....................",
+    "##...................",
+    "###..................",
+    "####.................",
+    "#####################",
+    ".....................",
+]
 
-def flood_fill(input_board, old, new, x, y):
-    """Returns board with old values replaced with new values
-    through flood filling starting from the coordinates x, y
-    Args:
-        input_board (List[str]): The input board
-        old (str): Value to be replaced
-        new (str): Value that replaces the old
-        x (int): X-coordinate of the flood start point
-        y (int): Y-coordinate of the flood start point
-    Returns:
-        List[str]: Modified board
-    """
-    # In case change of input
-    input_board = input_board.copy()
-    
-    width, length = len(input_board), len(input_board[0])
-    # Exception
-    if input_board[x][y] != old:
-        raise AttributeError(f'Start value at (x, y) is {input_board[x][y]}, not {old}!')
-    # Modify the value
-    s_list = list(input_board[x])
-    s_list[y] = new
-    input_board[x] = ''.join(s_list)
-    # Recursive function
-    if x > 0 and input_board[x-1][y] == old:
-        input_board = flood_fill(input_board, old, new, x-1, y)
-    if x < width - 1 and input_board[x+1][y] == old:
-        input_board = flood_fill(input_board, old, new, x+1, y)
-    if y > 0 and input_board[x][y-1] == old:
-        input_board = flood_fill(input_board, old, new, x, y-1)
-    if y < length - 1 and input_board[x][y+1] == old:
-        input_board = flood_fill(input_board, old, new, x, y+1)
-    return input_board
-
-
-# Unit Test 1
+# Testing the flood_fill function on the default board
 modified_board = flood_fill(input_board=board, old=".", new="~", x=5, y=12)
 
 for a in modified_board:
     print(a)
-print('\n\n')
+print('\n')
 
-# Expected output:
+# Expected output for the default board:
 # ......................
 # ......##########......
 # ......#~~~~~~~~#......
@@ -99,18 +97,19 @@ print('\n\n')
 # ....#~~~~~~~~~~~~###..
 # ....##############....
 
-# Unit Test 2
-modified_board = flood_fill(input_board=board, old=".", new="~", x=1, y=1)
 
-for a in modified_board:
-    print(a)
+# Testing the flood_fill function on the additional board
+modified_additional_board = flood_fill(input_board=additional_board, old=".", new="*", x=3, y=4)
 
-# Expected output:
-#~~~~~~~~~~~~~~~~~~~~~~
-#~~~~~~##########~~~~~~
-#~~~~~~#........#~~~~~~
-#~~~~~~#........#~~~~~~
-#~~~~~~#........#####~~
-#~~~~###............#~~
-#~~~~#............###~~
-#~~~~##############~~~~
+for row in modified_additional_board:
+    print(row)
+
+# Expected output for the additional board:
+# ####.................*.
+# #....................*.
+# ##...................*.
+# ###..................*.
+# ####.................**.
+# #####################**.
+# .....................***.
+
