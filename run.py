@@ -10,6 +10,30 @@ Date: 2023/10/22
 Flood Fill Function
 Flood-fill is a common algorithm used to fill connected regions of the board with a new value based on a specified condition. The code takes an input board, an old value, a new value, and coordinates (x, y) as arguments. It recursively updates the board by changing the old value to the new value for all connected cells.
 """
+#additional boards
+additional_boards = [
+    "......................",
+    "......**********......",
+    "......*........*......",
+    "......*........*......",
+    "......*........*****..",
+    "....***............*..",
+    "....*............***..",
+    "....**************....",
+]
+
+for additional_board in additional_boards:
+    print("Original Board:")
+    for a in additional_board:
+        print(a)
+    
+    modified_board = flood_fill(input_board=additional_board, old=".", new="~", x=5, y=12)
+    
+    print("\nModified Board:")
+    for a in modified_board:
+        print(a)
+    print('\n\n')
+
 
 board = [
     "......................",
